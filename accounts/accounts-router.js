@@ -1,26 +1,39 @@
 const express = require("express")
-
+const query = require("../queries")
 // database access using knex
 const db = require("../data/dbConfig")
 
 const router = express.Router()
 
-// Get All Accounts
 router.get("/", (req, res) => {
-  // list of accounts
-  // select from accounts
-  // all database operations return a promise
-  db.select("*")
-    .from("accounts")
-    .limit()
-    .then(accounts => {
-      res.status(200).json(accounts)
-    })
-    .catch(error => {
-      console.log(error)
-      res.status(500).json({ error: "failed to get list of accounts" })
-    })
+  const { limit } = req.query
+  console.log(limit == 5, "HELLO")
+  query
+    .getstuff({ limit })
+    .then(
+      accounts => res.status(200).json(accounts) & console.log(accounts.length)
+    )
+    .catch(err => res.status(500).json(err.message))
 })
+
+// // Get All Accounts
+// router.get("/", (req, res) => {
+//   // list of accounts
+//   // select from accounts
+//   // all database operations return a promise
+//   const { limit } = req.query
+//   console.log(limit == 5, "Hello")
+
+//   db.select("*")
+//     .from("accounts")
+//     .then(accounts => {
+//       res.status(200).json(accounts)
+//     })
+//     .catch(error => {
+//       console.log(error)
+//       res.status(500).json({ error: "failed to get list of accounts" })
+//     })
+// })
 
 router.get("/:id", (req, res) => {
   // an account by it's Id
